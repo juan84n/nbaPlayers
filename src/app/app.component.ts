@@ -10,16 +10,34 @@ import { PlayerService } from './services/player.service';
 export class AppComponent {
   title = 'nbaProject';
 
-  public players: Player[] = null;
+  public players;
 
   constructor(public playerService: PlayerService) { }
 
   public searchHeight(height: number): void {
-    this.playerService.getPlayerByHeight(height)
-      .toPromise()
-      .then(player => {
-        this.players = player.values.filter(play => play.h_in === height);
-        console.log(this.players);
-      });
+    if (height) {
+      this.playerService.getPlayerByHeight(height)
+        .subscribe(player => {
+          if (player && player.values.length > 0) {
+            this.evaluateByMap(player, height);
+          }
+        });
+    }
+  }
+
+  evaluateByMap(player: any, height: number): void {
+    const mapPlayers = new Map();
+    const playersArr: Player[] = player.values;
+    this.players = [];
+    playersArr.forEach((play, index) => {
+      const dif = height - parseInt(play.h_in, 10);
+      if (mapPlayers.has(dif)) {
+        this.players.push({
+          player1: `${play.first_name} ${play.last_name}`,
+          player2: `${playersArr[mapPlayers.get(dif)].first_name} ${playersArr[mapPlayers.get(dif)].last_name}`
+        });
+      }
+      mapPlayers.set(parseInt(play.h_in, 10), index);
+    });
   }
 }
