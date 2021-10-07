@@ -9,12 +9,17 @@ import { Player } from '../models/player';
 export class PlayerService {
 
     public url = 'https://mach-eight.uc.r.appspot.com/';
+    public playersInfo;
 
     constructor(protected http: HttpClient) {
     }
 
     getPlayerByHeight(height: number): Observable<any> {
+      if (!this.playersInfo) {
         return this.http.get<Player[]>(this.url);
+      } else {
+        return of(this.playersInfo);
+      }
     }
 
 }

@@ -11,13 +11,19 @@ export class AppComponent {
   title = 'nbaProject';
 
   public players;
+  public isLoading = false;
 
   constructor(public playerService: PlayerService) { }
 
   public searchHeight(height: number): void {
     if (height) {
+      this.isLoading = true;
       this.playerService.getPlayerByHeight(height)
         .subscribe(player => {
+          this.isLoading = false;
+          if (!this.playerService.playersInfo) {
+            this.playerService.playersInfo = player;
+          }
           if (player && player.values.length > 0) {
             this.evaluateByMap(player, height);
           }

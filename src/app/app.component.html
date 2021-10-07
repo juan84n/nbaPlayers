@@ -345,14 +345,16 @@
   </div>
 
 
-  <!-- Links -->
-  <div class="card-container" *ngIf="players?.length > 0">
+  <div class="card-container" *ngIf="isLoading">
+    <img src="../assets/img/load-loading.gif">
+  </div>
+  <div class="card-container" *ngIf="players?.length > 0 && !isLoading">
     <ul>
       <li *ngFor="let item of players">{{item.player1}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.player2}}</li>
     </ul>
   </div>
 
-  <div class="card-container" *ngIf="players?.length === 0">
+  <div class="card-container" *ngIf="players?.length === 0 && !isLoading">
     No matches found
   </div>
 </div>
